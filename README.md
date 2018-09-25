@@ -1,4 +1,5 @@
-# TecPoster User
+# Build development environment for TecPoster
+#project/tecposter
 
 ## hosts
 /etc/hosts
@@ -201,7 +202,7 @@ sudo certbot --nginx certonly -w /var/space/tec-user/site/public -d user.tecpost
 ```
 
 
-生成dhparam, may take a little long time
+Generate dhparam, may take a little long time
 ```
 sudo openssl dhparam -out /etc/nginx/ssl/dhparam.pem 2048
 ```
@@ -260,7 +261,7 @@ return $collection;
 ```
 
 Edit setting/system.site.php
-```phpphp
+```php
 <?php
 $collection = new \Gap\Config\ConfigCollection();
 
@@ -292,11 +293,38 @@ composer gap buildModule 'Tec\User\Landing'
 ```
 
 Edit Router
-```
-// 
+```php
+// app/tec/user/setting/router/landing.php
+<?php
+$collection = new \Gap\Routing\RouteCollection();
+
+$collection
+    ->site('default')
+    ->access('public')
+
+    ->get('/', 'home', 'Tec\User\Landing\Ui\HomeUi@front');
+
+return $collection;
+
 ```
 
 Build Entity
 ```
-composer 
+composer gap buildEntity 'Tec\User\Landing\Ui\HomeUi' 
+```
+
+Edit UI entity file
+```php
+<?php
+namespace Tec\User\Landing\Ui;
+
+use Gap\Http\Response;
+
+class HomeUi extends UiBase
+{
+    public function front(): Response
+    {
+        return new Response('home');
+    }
+}
 ```
