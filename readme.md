@@ -1,4 +1,4 @@
-# TecPoster
+# TecPoster User
 
 ## hosts
 /etc/hosts
