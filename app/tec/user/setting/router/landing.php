@@ -17,6 +17,10 @@ $collection
     ->site('default')
     ->access('public')
 
+    ->get('/login', 'login', 'Tec\User\Landing\Ui\UserUi@login')
+    ->post('/login', 'login', 'Tec\User\Landing\Ui\UserUi@loginPost')
+    ->get('/reg', 'reg', 'Tec\User\Landing\Ui\UserUi@reg')
+    ->post('/reg', 'reg', 'Tec\User\Landing\Ui\UserUi@regPost')
     ->get('/', 'home', 'Tec\User\Landing\Ui\HomeUi@front');
 
 return $collection;

@@ -1,0 +1,30 @@
+<?php $this->layout('layout/gap'); ?>
+
+<?php $this->section('main'); ?>
+<div class="background-tint">
+<h1><?php echo $this->trans('reg'); ?></h1>
+<form action="<?php echo $this->routePost('reg'); ?>" method="post">
+    <label>
+        <span><?php echo $this->trans('email'); ?></span>
+        <input type="email" name="email" value="" placeholder="email">
+    </label>
+    <label>
+        <span><?php echo $this->trans('password'); ?></span>
+        <input type="password" name="password" value="" placeholder="password">
+    </label>
+    <label>
+        <span><?php echo $this->trans('nick'); ?></span>
+        <input type="text" name="nick" value="" placeholder="nick">
+    </label>
+    <label>
+        <span><?php echo $this->trans('fullname'); ?></span>
+        <input type="text" name="fullname" value="" placeholder="fullname">
+    </label>
+    <div>
+        <button class="btn primary-tint"><?php echo $this->trans('submit'); ?></button>
+        <a href="<?php echo $this->routeGet('login'); ?>"><?php echo $this->trans('login'); ?></a> 
+    </div>
+</form>
+</div>
+<?php $this->replace(); ?>
+

@@ -10,7 +10,7 @@ $collection
             'host' => 'user-api%baseHost%',
         ],
         'static' => [
-            'host' => 'user-static.%baseHost%',
+            'host' => 'static.%baseHost%',
             'dir' => '%baseDir%/site/static',
         ],
     ]);
