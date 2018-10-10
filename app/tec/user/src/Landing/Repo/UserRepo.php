@@ -12,6 +12,29 @@ class UserRepo extends RepoBase
 {
     private $table = 'user';
 
+    public function fetchByEmail(string $inEmail): ?UserDto
+    {
+        $email = trim($inEmail);
+
+        $ssb = $this->cnn->ssb()
+            ->select(
+                'userId',
+                'email',
+                'phone',
+                'zcode',
+                'fullname',
+                'created',
+                'changed',
+                'passhash'
+            )
+            ->from('user')->end()
+            ->where()
+                ->expect('email')->equal()->str($email)
+            ->end();
+
+        return $ssb->fetch(UserDto::class);
+    }
+
     public function create(UserDto $userDto): void
     {
         $userDto->email = trim($userDto->email);

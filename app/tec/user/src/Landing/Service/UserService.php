@@ -27,6 +27,17 @@ class UserService extends ServiceBase
         $this->getUserRepo()->create($userDto);
     }
 
+    public function loginByEmail(string $email, string $password): ?UserDto
+    {
+        if ($userDto = $this->getUserRepo()->fetchByEmail($email)) {
+            if ((new PasshashProvider())->verify($password, $userDto->passhash)) {
+                return $userDto;
+            }
+        }
+
+        return null;
+    }
+
     private function validatePassword($password): void
     {
         (new ValidPassword())->assert($password);

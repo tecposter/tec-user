@@ -17,6 +17,7 @@ $collection
     ->site('default')
     ->access('public')
 
+    ->get('/logout', 'logout', 'Tec\User\Landing\Ui\UserUi@logout')
     ->get('/login', 'login', 'Tec\User\Landing\Ui\UserUi@login')
     ->post('/login', 'login', 'Tec\User\Landing\Ui\UserUi@loginPost')
     ->get('/reg', 'reg', 'Tec\User\Landing\Ui\UserUi@reg')

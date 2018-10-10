@@ -7,19 +7,61 @@ use Gap\Http\RedirectResponse;
 
 use Tec\User\Landing\Dto\RegDto;
 use Tec\User\Landing\Service\UserService;
+use Tec\User\Landing\Service\OpenIdService;
+
+use Symfony\Component\HttpFoundation\Cookie;
 
 class UserUi extends UiBase
 {
     private $userService;
+    private $openIdService;
+
+    public function logout(): RedirectResponse
+    {
+        $homeUrl = $this->getRouteUrlBuilder()->routeGet('home');
+        $response = new RedirectResponse($homeUrl);
+        // public function clearCookie($name, $path = '/', $domain = null, $secure = false, $httpOnly = true)
+        $response->headers->clearCookie('idToken', '/', '.' . $this->config->str('baseHost'), true, true);
+        return $response;
+    }
 
     public function login(): Response
     {
         return $this->view('page/landing/login');
     }
 
-    public function loginPost(): Response
+    public function loginPost(): ResponseInterface
     {
-        return new Response('login post');
+        $post = $this->request->request;
+        $email = $post->get('email');
+        $password = $post->get('password');
+
+        $userDto = $this->getUserService()->loginByEmail($email, $password);
+        if (is_null($userDto)) {
+            return new Response('login failed');
+        }
+
+        // https://symfony.com/blog/new-in-symfony-3-3-cookie-improvements
+
+        $idToken = $this->getOpenIdService()->createIdTokenByUser($userDto);
+        $cookie = new Cookie('idToken', (string) $idToken);
+
+        $homeUrl = $this->getRouteUrlBuilder()->routeGet('home');
+        $response = new RedirectResponse($homeUrl);
+
+        // public function __construct(
+        // $name, $value = null, $expire = 0, $path = '/', $domain = null,
+        // $secure = false, $httpOnly = true, $raw = false, $sameSite = null)
+        $response->headers->setCookie(new Cookie(
+            'idToken',
+            $idToken,
+            0,
+            '/', // path
+            '.' . $this->config->str('baseHost'), // domain
+            true,   // secure
+            true    // httpOnly
+        ));
+        return $response;
     }
 
     public function reg(): Response
@@ -52,5 +94,15 @@ class UserUi extends UiBase
 
         $this->userService = new UserService($this->app);
         return $this->userService;
+    }
+
+    private function getOpenIdService(): OpenIdService
+    {
+        if ($this->openIdService) {
+            return $this->openIdService;
+        }
+
+        $this->openIdService = new OpenIdService($this->app);
+        return $this->openIdService;
     }
 }

@@ -7,6 +7,12 @@ class HomeUi extends UiBase
 {
     public function front(): Response
     {
-        return new Response('home');
+        $cookies = $this->request->cookies;
+
+        if ($cookies->get('idToken')) {
+            return new Response($cookies->get('idToken'));
+        }
+
+        return new Response('not-login');
     }
 }
