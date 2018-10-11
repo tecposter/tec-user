@@ -10,7 +10,7 @@ use Gap\Dto\DateTime;
 
 class UserRepo extends RepoBase
 {
-    private $table = 'user';
+    private $table = 'tec_user';
 
     public function fetchByEmail(string $inEmail): ?UserDto
     {
@@ -27,7 +27,7 @@ class UserRepo extends RepoBase
                 'changed',
                 'passhash'
             )
-            ->from('user')->end()
+            ->from($this->table)->end()
             ->where()
                 ->expect('email')->equal()->str($email)
             ->end();
